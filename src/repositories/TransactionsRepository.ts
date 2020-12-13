@@ -20,11 +20,32 @@ class TransactionsRepository {
   }
 
   public all(): Transaction[] {
-    // TODO
+    return this.transactions;
   }
 
   public getBalance(): Balance {
-    // TODO
+
+    const { income, outcome } = this.transactions.reduce((total, transaction) => {
+      switch (transaction.type) {
+        case 'income':
+          total.income += transaction.value
+          break
+        case 'outcome':
+          total.outcome += transaction.value
+          break
+        default:
+          break
+      }
+
+      return total
+    }, {
+      income: 0,
+      outcome: 0
+    });
+
+    const total = income - outcome
+
+    return { total, income, outcome }
   }
 
   public create({ title, value, type }: CreateTransactionDTO): Transaction {
